@@ -1,35 +1,35 @@
 # ccbox
 
-A minimal Docker container with Claude Code and document-generation skills (PDF, XLSX, PPTX, DOCX, and more).
+Claude Code with document-generation skills — PDF, XLSX, PPTX, DOCX, and more — in a Docker container.
 
-## Build
-
-**Prerequisites:** [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/getting-started/installation)
+## Quick start
 
 ```bash
-git clone https://github.com/martin-koenig/ccbox.git
-cd ccbox
-docker build -t ccbox .
+curl -fsSL https://raw.githubusercontent.com/mk0e/ccbox/main/install.sh | bash
 ```
 
-## Run
-
-### With install script (recommended)
-
-The install script adds a `ccbox` command to your shell:
-
-```bash
-./install.sh
-source ~/.zshrc  # or ~/.bashrc
-```
-
-Then from any project directory:
+Close your terminal, open a new one, then from any directory:
 
 ```bash
 ccbox
 ```
 
-### Without install script
+The installer walks you through authentication. The image is pulled automatically on first run.
+
+To change auth, update, or uninstall — run the installer again:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/mk0e/ccbox/main/install.sh | bash
+```
+
+## Alternative: clone and install
+
+```bash
+git clone https://github.com/mk0e/ccbox.git
+cd ccbox && ./install.sh
+```
+
+## Without the installer
 
 ```bash
 mkdir -p ~/.ccbox
@@ -39,28 +39,13 @@ docker run -it --rm \
   ccbox
 ```
 
-Both methods mount your current directory as the workspace and `~/.ccbox` for persistent config.
-
-## Authenticate
-
-Type `/login` inside Claude Code and follow the prompts. Credentials persist in `~/.ccbox/` across sessions.
-
 ## Resume a session
 
-Sessions persist in `~/.ccbox/` between runs. To continue where you left off:
-
 ```bash
-# With install script:
 ccbox claude --continue
-
-# With plain Docker:
-docker run -it --rm \
-  -v "$(pwd)":/workspace \
-  -v ~/.ccbox:/home/claude/.claude \
-  ccbox claude --continue
 ```
 
-To resume a specific session by ID:
+To resume a specific session:
 
 ```bash
 ccbox claude --resume <session-id>
@@ -68,18 +53,8 @@ ccbox claude --resume <session-id>
 
 ## One-shot mode
 
-Run a single prompt without the interactive UI:
-
 ```bash
-# With install script:
 ccbox claude --print "Create a PDF report summarizing Q1 sales"
-
-# With plain Docker:
-docker run --rm \
-  -e ANTHROPIC_API_KEY \
-  -v "$(pwd)":/workspace \
-  -v ~/.ccbox:/home/claude/.claude \
-  ccbox claude --print "Create a PDF report summarizing Q1 sales"
 ```
 
 ## What's inside
@@ -142,11 +117,8 @@ Or to `~/.ccbox/skills/` (available in all sessions).
 
 ## Configuration
 
-Environment variables passed to the container:
-
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `ANTHROPIC_API_KEY` | — | Anthropic API key |
 | `PUID` / `PGID` | `1000` | Match container user to your host UID/GID |
 | `GIT_USER_NAME` | `Claude` | Git author name inside container |
 | `GIT_USER_EMAIL` | `claude@ccbox` | Git author email inside container |

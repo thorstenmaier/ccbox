@@ -75,7 +75,9 @@ RUN usermod -l claude -d /home/claude -m node && \
     chmod 0440 /etc/sudoers.d/claude
 
 # ---------- Claude Code CLI ----------
-RUN npm i -g @anthropic-ai/claude-code
+RUN curl -fsSL https://claude.ai/install.sh | bash \
+    && cp /root/.local/bin/claude /usr/local/bin/claude \
+    && cp -r /root/.local/share/claude /usr/local/share/claude
 
 # ---------- Node packages (global) ----------
 RUN npm i -g \
